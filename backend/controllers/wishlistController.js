@@ -1,0 +1,3 @@
+const Wishlist=require('../models/Wishlist');const Product=require('../models/Product');
+exports.get=async(req,res)=>{const list=await Wishlist.findOne({user:req.user._id}).populate('products');res.json({products:list?.products||[]});};
+exports.toggle=async(req,res)=>{if(!await Product.exists({_id:req.params.productId}))return res.status(404).json({message:'Product not found'});let list=await Wishlist.findOne({user:req.user._id});if(!list)list=await Wishlist.create({user:req.user._id,products:[]});const id=req.params.productId;const exists=list.products.some(p=>p.toString()===id);list.products=exists?list.products.filter(p=>p.toString()!==id):[...list.products,id];await list.save();await list.populate('products');res.json({products:list.products});};

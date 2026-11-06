@@ -1,0 +1,1 @@
+const router=require('express').Router();const c=require('../controllers/couponController');const {protect}=require('../middleware/auth');router.post('/validate',protect,c.validate);module.exports=router;
